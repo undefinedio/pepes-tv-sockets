@@ -7,7 +7,7 @@ class SocketsController {
     }
 
     init() {
-        this.wss.on('connection', (ws, req) => {
+        this.wss.on('connection', function (ws, req) {
 
             ws.on('youtubeQuery', function incoming(message) {
                 console.log('received: %s', message);

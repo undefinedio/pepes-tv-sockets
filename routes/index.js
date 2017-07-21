@@ -4,6 +4,7 @@ const YTsearch = require('youtube-search');
 
 const opts = {
     maxResults: 10,
+    type: 'video',
     key: 'AIzaSyBnvqBZKLGn-TZPTyOaaCAjAldua-QmV9Y'
 };
 
@@ -12,14 +13,10 @@ router.get('/', function (req, res, next) {
     res.render('index', {title: 'What Should pepe watch?'});
 });
 
-router.post('/query', (req, res, next) => {
-    let searchQuery = req.body.query;
+router.post('/query', function (req, res, next) {
+    var searchQuery = req.body.query;
 
-    console.log(searchQuery);
-
-    YTsearch(searchQuery, opts, (err, results) => {
-        console.log('results', JSON.stringify(results));
-        global.magicSockets.send(JSON.stringify(results));
+    YTsearch(searchQuery, opts, function (err, results) {
         res.json({results: results});
     })
 });
