@@ -1,62 +1,6 @@
 import youTubePlayer from 'youtube-player';
 
-$(document).ready(function () {
-    setTimeout(() => {
-        FB.login(function (response) {
-                // handle the response
-            },
-            {
-                scope: `public_profile, email,manage_pages,user_videos,pages_show_list,publish_pages`
-            });
-
-        FB.getLoginStatus(function (response) {
-            if (response.authResponse) {
-                setInterval(() => {
-                    loop();
-                }, 2000);
-            }
-        });
-    }, 500);
-
-    let lastMessage = '';
-
-    function loop() {
-        FB.api('345927435821495/comments', 'GET', {
-            order: 'reverse_chronological'
-        }, (res) => {
-            let newMessage = res.data[0].message;
-
-            if (newMessage == lastMessage) {
-                return;
-            }
-            lastMessage = newMessage;
-
-            var url = "/query"; // the script where you handle the form input.
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: {
-                    query: newMessage,
-                },
-            }).then((res) => {
-                // list of new videos to play
-                console.log(res);
-            });
-        });
-    }
-
-    // 2. This code loads the IFrame Player API code asynchronously.
-    var tag = document.createElement('script');
-
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-    // 3. This function creates an <iframe> (and YouTube player)
-    //    after the API code downloads.
-    var player;
-});
+const VIDEOID = "345927435821495";
 
 class App {
     start() {
@@ -139,9 +83,66 @@ class App {
     }
 }
 
-/**
- * Start the app
- * @type {Player}
- */
-const app = new App();
-app.start();
+$(document).ready(function () {
+    const app = new App();
+
+    setTimeout(() => {
+        FB.login(function (response) {
+                //test 123
+            },
+            {
+                scope: `public_profile, email,manage_pages,user_videos,pages_show_list,publish_pages`
+            });
+
+        FB.getLoginStatus(function (response) {
+            app.start();
+            getLastVideo();
+            console.log('Login sucess');
+            console.log('start app');
+
+            if (response.authResponse) {
+                setInterval(() => {
+                    loop();
+                }, 2000);
+            }
+        });
+    }, 500);
+
+    function getLastVideo() {
+        FB.api('videos/', 'GET', {
+            order: 'reverse_chronological'
+        }, (res) => {
+            console.log('all videos');
+            console.log(res);
+        });
+    }
+
+    let lastMessage = '';
+
+    function loop() {
+        FB.api(VIDEOID + '/comments', 'GET', {
+            order: 'reverse_chronological'
+        }, (res) => {
+            let newMessage = res.data[0].message;
+
+            if (newMessage == lastMessage) {
+                return;
+            }
+            lastMessage = newMessage;
+
+            var url = "/query"; // the script where you handle the form input.
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    query: newMessage,
+                },
+            }).then((res) => {
+                // list of new videos to play
+                console.log(res);
+                app.recieveNewVideos(res.results);
+            });
+        });
+    }
+});

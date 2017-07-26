@@ -1,6 +1,7 @@
 import youTubePlayer from 'youtube-player';
 
-const VIDEOID = "345927435821495";
+let VIDEOID = "";
+const PAGEID = "175095669571340"; // TESTPAGE = 175095669571340 -- UNDEFINED = 358032047655437
 
 class App {
     start() {
@@ -94,17 +95,28 @@ $(document).ready(function () {
             });
 
         FB.getLoginStatus(function (response) {
-            app.start();
-            console.log('Login sucess');
             console.log('start app');
+            app.start();
+            getLastVideo();
 
             if (response.authResponse) {
+                console.log('Login sucess');
                 setInterval(() => {
                     loop();
                 }, 2000);
             }
         });
     }, 500);
+
+    function getLastVideo() {
+        FB.api(PAGEID + '/videos/', 'GET', {
+            order: 'reverse_chronological'
+        }, (res) => {
+            console.log('all videos');
+            console.log(res);
+            VIDEOID = res.data[0].id;
+        });
+    }
 
     let lastMessage = '';
 
@@ -119,7 +131,7 @@ $(document).ready(function () {
             }
             lastMessage = newMessage;
 
-            var url = "/query"; // the script where you handle the form input.
+            let url = "/query"; // the script where you handle the form input.
 
             $.ajax({
                 type: "POST",
