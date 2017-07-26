@@ -9,11 +9,11 @@ const opts = {
 };
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.get('/', (req, res, next) => {
     res.render('index', {title: 'What Should pepe watch?'});
 });
 
-router.post('/query', function (req, res, next) {
+router.post('/query', (req, res, next) => {
     var searchQuery = req.body.query;
 
     YTsearch(searchQuery, opts, function (err, results) {

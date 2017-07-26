@@ -1,5 +1,7 @@
 import youTubePlayer from 'youtube-player';
 
+const VIDEOID = "345927435821495";
+
 class App {
     start() {
         this.i = 0;
@@ -86,26 +88,28 @@ $(document).ready(function () {
 
     setTimeout(() => {
         FB.login(function (response) {
-                // handle the response
             },
             {
                 scope: `public_profile, email,manage_pages,user_videos,pages_show_list,publish_pages`
             });
 
         FB.getLoginStatus(function (response) {
+            app.start();
+            console.log('Login sucess');
+            console.log('start app');
+
             if (response.authResponse) {
                 setInterval(() => {
                     loop();
                 }, 2000);
             }
         });
-        app.start();
     }, 500);
 
     let lastMessage = '';
 
     function loop() {
-        FB.api('345927435821495/comments', 'GET', {
+        FB.api(VIDEOID + '/comments', 'GET', {
             order: 'reverse_chronological'
         }, (res) => {
             let newMessage = res.data[0].message;
