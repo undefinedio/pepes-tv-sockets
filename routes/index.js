@@ -14,10 +14,9 @@ router.get('/', (req, res) => {
 });
 
 router.post('/query', (req, res) => {
-    var searchQuery = req.body.query;
-
-    YTsearch(searchQuery, opts, function (err, results) {
+    YTsearch(req.body.message, opts, function (err, results) {
         res.json({results: results});
+        global.magicSockets.send(req.body);
     })
 });
 

@@ -19,6 +19,7 @@ class SocketsController {
 
     send(data) {
         console.log('broadcasting results to client');
+        console.log(data);
         this.wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
                 client.send(data);

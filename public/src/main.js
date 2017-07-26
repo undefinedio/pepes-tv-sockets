@@ -1,6 +1,6 @@
 import youTubePlayer from 'youtube-player';
 
-let VIDEOID = "";
+let VIDEOID = "347910418956530";
 const PAGEID = "175095669571340"; // TESTPAGE = 175095669571340 -- UNDEFINED = 358032047655437
 
 class App {
@@ -124,26 +124,29 @@ $(document).ready(function () {
         FB.api(VIDEOID + '/comments', 'GET', {
             order: 'reverse_chronological'
         }, (res) => {
-            let newMessage = res.data[0].message;
+            if (res.data[0]) {
+                let newMessage = res.data[0];
 
-            if (newMessage == lastMessage) {
-                return;
+                if (newMessage.message === lastMessage.message) {
+                    return;
+                }
+                lastMessage = newMessage;
+
+                let url = "/query"; // the script where you handle the form input.
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        message: newMessage.message,
+                        from: newMessage.from.name,
+                    },
+                }).then((res) => {
+                    // list of new videos to play
+                    console.log(res);
+                    app.recieveNewVideos(res.results);
+                });
             }
-            lastMessage = newMessage;
-
-            let url = "/query"; // the script where you handle the form input.
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: {
-                    query: newMessage,
-                },
-            }).then((res) => {
-                // list of new videos to play
-                console.log(res);
-                app.recieveNewVideos(res.results);
-            });
         });
     }
 });
