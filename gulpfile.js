@@ -2,6 +2,7 @@ const gulp = require('gulp');
 const babel = require('gulp-babel');
 var webpack = require('gulp-webpack');
 var browserify = require('gulp-browserify');
+var es2015 = require('babel-preset-es2015');
 var watch = require('gulp-watch');
 
 gulp.task('default', () => {
@@ -12,7 +13,7 @@ gulp.task('default', () => {
 gulp.task('js', () => {
     return gulp.src('public/src/main.js')
         .pipe(babel({
-            presets: ['es2015']
+            presets: [es2015]
         }))
         .pipe(browserify({
             insertGlobals: true,
