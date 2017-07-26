@@ -13,7 +13,7 @@ gulp.task('watch', function () {
 });
 
 gulp.task('js', () => {
-    return gulp.src('public/src/main.js')
+    return gulp.src('public/src/**/*.js')
         .pipe(babel({
             presets: [es2015]
         }))
