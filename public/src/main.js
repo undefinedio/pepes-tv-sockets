@@ -96,10 +96,14 @@ $(document).ready(function () {
 
         FB.getLoginStatus(function (response) {
             console.log('start app');
-            app.start();
-            getLastVideo();
-
             if (response.authResponse) {
+                app.start();
+                getLastVideo();
+
+                setInterval(() => {
+                    getLastVideo();
+                }, 20000);
+
                 console.log('Login sucess');
                 setInterval(() => {
                     loop();
@@ -112,7 +116,7 @@ $(document).ready(function () {
         FB.api(PAGEID + '/videos/', 'GET', {
             order: 'reverse_chronological'
         }, (res) => {
-            console.log('all videos');
+            console.log('all videos:');
             console.log(res);
             VIDEOID = res.data[0].id;
         });
