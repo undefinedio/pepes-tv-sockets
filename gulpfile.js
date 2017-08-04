@@ -1,6 +1,5 @@
 const gulp = require('gulp');
 const babel = require('gulp-babel');
-var webpack = require('gulp-webpack');
 var browserify = require('gulp-browserify');
 var es2015 = require('babel-preset-es2015');
 var watch = require('gulp-watch');
